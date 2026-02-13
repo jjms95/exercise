@@ -13,6 +13,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get('/employees', (req, res) => {
+  const { name, role } = req.query;
+
+  let employeesList = [...employees];
+
+  if (name) {
+    employeesList = employeesList.filter(employee => employee.name === name);
+  }
+
+  if (role) {
+    employeesList = employeesList.filter(employee => employee.role === role);
+  }
+
   res.status(200).send(employees);
 });
 
