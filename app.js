@@ -12,10 +12,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/employees', (req, res) => {
-  const { name, role } = req.query;
+const EMPLOYEES_PER_PAGE = 50;
 
-  let employeesList = [...employees];
+app.get('/employees', (req, res) => {
+  const { name, role, page } = req.query;
+
+  let employeesList = [...employees].sort((a, b) => a.name.localeCompare(b.name));
+
+  const pageNumber = Number(page) || 0;
 
   if (name) {
     employeesList = employeesList.filter(employee => employee.name === name);
@@ -25,12 +29,11 @@ app.get('/employees', (req, res) => {
     employeesList = employeesList.filter(employee => employee.role === role);
   }
 
-  res.status(200).send(employees);
+  employeesList = employeesList.slice(pageNumber * EMPLOYEES_PER_PAGE, (pageNumber + 1) * EMPLOYEES_PER_PAGE);
+  res.status(200).send(employeesList);
 });
 
 app.post('/employees', async (req, res) => {
-  console.log(req);
-
   const employee = req.body;
   employees.push(employee);
 
