@@ -16,5 +16,5 @@ GET http://localhost:3000/employees/:id
 
 ```bash
 docker build -t employees-server .
-docker run -p 3000:3000 employees-server
+docker run -p 3000:3000 --name employees-server -d employees-server
 ```
